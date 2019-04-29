@@ -15,15 +15,15 @@ class BinaryTree
 public:
 	Node* rootNode;
 public:
-	void AddNode(int _data);
-	void RemoveNode(int _data);
+	void AddNode(int data);
+	void RemoveNode(int data);
 	void PrintAllNode();
 private:
-	Node* CreateNode(int _data);
-	void InsertNode(Node* _tree, Node* _newNode);
-	Node* DeleteNode(Node* _tree, int _data);
-	Node* FindIn(Node* _root);
-	void InOrder(Node* _root);
+	Node* CreateNode(int data);
+	void InsertNode(Node* tree, Node* newNode);
+	Node* DeleteNode(Node* tree, int data);
+	Node* FindMinParent(Node* root);
+	void InOrder(Node* root);
 public:
 	BinaryTree();
 	~BinaryTree();

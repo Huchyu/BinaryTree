@@ -1,18 +1,17 @@
 #include "BinaryTree.h"
 
-
-
 BinaryTree::BinaryTree()
 {
+	rootNode = nullptr;
 }
 
 BinaryTree::~BinaryTree()
 {
 }
 
-void BinaryTree::AddNode(int _data)
+void BinaryTree::AddNode(int data)
 {
-	Node* newNode = CreateNode(_data);
+	Node* newNode = CreateNode(data);
 
 	if (rootNode == nullptr)
 	{
@@ -24,7 +23,7 @@ void BinaryTree::AddNode(int _data)
 	}
 }
 
-void BinaryTree::RemoveNode(int _data)
+void BinaryTree::RemoveNode(int data)
 {
 	if (rootNode == nullptr)
 	{
@@ -32,105 +31,124 @@ void BinaryTree::RemoveNode(int _data)
 	}
 	else
 	{
-		DeleteNode(rootNode, _data);
+		DeleteNode(rootNode, data);
 	}
 }
 
 void BinaryTree::PrintAllNode()
 {
+	InOrder(rootNode);
 }
 
-Node * BinaryTree::CreateNode(int _data)
+Node * BinaryTree::CreateNode(int data)
 {
 	Node* newNode = new Node;
 	newNode->left = nullptr;
 	newNode->right = nullptr;
-	newNode->data = _data;
+	newNode->data = data;
 	return newNode;
 }
 
-void BinaryTree::InsertNode(Node * _tree, Node * _newNode)
+void BinaryTree::InsertNode(Node * tree, Node * newNode)
 {
-	if (_tree->data < _newNode->data)
+	if (tree->data < newNode->data)
 	{
-		if (_tree->right == nullptr)
+		if (tree->right == nullptr)
 		{
-			_tree->right = _newNode;
+			tree->right = newNode;
 		}
 		else
 		{
-			InsertNode(_tree->right, _newNode);
+			InsertNode(tree->right, newNode);
 		}
 	}
-	else if (_tree->data > _newNode->data)
+	else if (tree->data > newNode->data)
 	{
-		if (_tree->left == nullptr)
+		if (tree->left == nullptr)
 		{
-			_tree->left = _newNode;
+			tree->left = newNode;
 		}
 		else
 		{
-			InsertNode(_tree->left, _newNode);
+			InsertNode(tree->left, newNode);
 		}
 	}
 	else
 	{
-		_tree->data = _newNode->data;
+		tree->data = newNode->data;
 	}
 }
 
-Node * BinaryTree::DeleteNode(Node * _tree, int _data)
+Node * BinaryTree::DeleteNode(Node * tree, int data)
 {
-	if (_tree->data > _data)
+	Node* temp = nullptr;
+	if (tree == nullptr)
 	{
-		DeleteNode(_tree->left, _data);
+		return nullptr;
 	}
-	else if (_tree->data < _data)
+	else if (data < tree->data)
 	{
-		DeleteNode(_tree->right, _data);
+		tree->left = DeleteNode(tree->left, data);
+	}
+	else if (data > tree->data)
+	{
+		tree->right = DeleteNode(tree->right, data);
 	}
 	else
 	{
-		if (_tree->left == nullptr && _tree->right == nullptr)
+		//자식이 없을 경우
+		if (tree->left == nullptr && tree->right == nullptr)
 		{
-			delete _tree;
-			_tree = nullptr;
+			delete tree;
+			tree = nullptr;
 		}
-		else if (_tree->left == nullptr || _tree->right == nullptr)
+		//자식이 오른쪽에 하나일 경우
+		else if (tree->left == nullptr)
 		{
-			if (_tree->left == nullptr)
-			{
-				_tree = _tree->right;
-			}
-			else if (_tree->right == nullptr)
-			{
-				_tree = _tree->left;
-			}
+			temp = tree;
+			tree = tree->right;
+			delete temp;
 		}
+
+		//자식이 왼쪽에 하나일 경우
+		else if (tree->right == nullptr)
+		{
+			temp = tree;
+			tree = tree->left;
+			delete temp;
+		}
+		//자식이 둘다 있을 경우
 		else
 		{
-			if (_tree->left->data < _tree->right->data)
-			{
-
-			}
-			else if (_tree->left->data > _tree->right->data)
-			{
-
-			}
-			else
-			{
-
-			}
+			temp = FindMinParent(tree->right);
+			tree->data = temp->data;
+			tree->right = DeleteNode(tree->right, temp->data);
 		}
 	}
-	return nullptr;
+
+	return tree;
 }
 
-Node * BinaryTree::FindIn(Node * _root)
+Node * BinaryTree::FindMinParent(Node * root)
 {
-	return nullptr;
+	while (root->left != nullptr)
+	{
+		root = root->left;
+	}
+
+	return root;
 }
 
-void BinaryTree::InOrder(Node * _root)
+void BinaryTree::InOrder(Node * root)
 {
+	if (root == nullptr)
+	{
+		return;
+	}
+
+	InOrder(root->left);
+
+	cout << root->data << endl;
+
+	InOrder(root->right);
 }
